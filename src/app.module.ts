@@ -1,6 +1,5 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -36,8 +35,8 @@ const envFilePath = join(__dirname, `../.env.stage.${process.env.STAGE}`);
       inject: [ConfigService],
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule implements OnModuleInit {
   onModuleInit() {

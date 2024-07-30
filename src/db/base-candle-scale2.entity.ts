@@ -19,4 +19,7 @@ export abstract class BaseCandleScale2 {
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   close: number;
+
+  @Column({ nullable: true })
+  volumn: number;
 }
