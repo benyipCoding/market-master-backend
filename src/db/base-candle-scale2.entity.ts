@@ -22,4 +22,7 @@ export abstract class BaseCandleScale2 {
 
   @Column({ nullable: true })
   volumn: number;
+
+  @Column({ default: 2 })
+  toFixedNum: number;
 }
