@@ -5,6 +5,9 @@ export abstract class BaseCandleScale2 {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  symbol: string;
+
   @Column({ type: 'datetime' })
   time: Date;
 

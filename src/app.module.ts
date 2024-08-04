@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { join } from 'path';
+import { UploadModule } from './upload/upload.module';
 
 const envFilePath = join(__dirname, `../.env.stage.${process.env.STAGE}`);
 
@@ -34,6 +35,7 @@ const envFilePath = join(__dirname, `../.env.stage.${process.env.STAGE}`);
       }),
       inject: [ConfigService],
     }),
+    UploadModule,
   ],
   controllers: [],
   providers: [],
