@@ -10,15 +10,6 @@
       "request": "attach",
       "skipFiles": ["<node_internals>/**"],
       "type": "node"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "启动程序",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\src\\app.controller.spec.ts",
-      "preLaunchTask": "tsc: build - tsconfig.json",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
 }
