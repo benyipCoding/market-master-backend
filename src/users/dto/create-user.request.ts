@@ -6,4 +6,7 @@ export class CreateUserRequest {
 
   @IsString()
   password: string;
+
+  @IsString()
+  username: string;
 }
