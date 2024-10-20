@@ -3,6 +3,7 @@ import { CreateUserRequest } from './dto/create-user.request';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import { RegularUserSelectField } from 'src/prisma/interfaces';
 
 @Injectable()
 export class UsersService {
@@ -16,11 +17,7 @@ export class UsersService {
           display_name: data.email,
           username: data.email,
         },
-        select: {
-          id: true,
-          email: true,
-          username: true,
-        },
+        select: RegularUserSelectField,
       });
     } catch (err) {
       // P2002是prisma内部的唯一性约束冲突代号
@@ -34,9 +31,10 @@ export class UsersService {
     }
   }
 
-  async getUser(filter: Prisma.UserWhereUniqueInput) {
+  async getUser(filter: Prisma.UserWhereUniqueInput, select?: any) {
     return this.prismaService.user.findUniqueOrThrow({
       where: filter,
+      select,
     });
   }
 }
