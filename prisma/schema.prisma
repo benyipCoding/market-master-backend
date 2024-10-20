@@ -14,9 +14,17 @@ datasource db {
 }
 
 enum Gender {
-  MALE
-  FEMALE
-  OTHER
+  Male
+  Female
+  Other
+}
+
+enum UserType {
+  SuperUser
+  Manager
+  Premium
+  Standard
+  Anonymous
 }
 
 model User {
@@ -34,11 +42,11 @@ model User {
   update_at         DateTime  @updatedAt()
   create_at         DateTime  @default(now())
   modifier_id       String?
-  username          String    @unique
+  username          String?   @unique
   mobile            String?   @unique
   avatar            String?
   display_name      String
   gender            Gender?
-  user_type         String?
+  user_type         UserType?
   login_error_count Int       @default(0)
 }
