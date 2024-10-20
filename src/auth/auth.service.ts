@@ -70,10 +70,11 @@ export class AuthService {
 
   async tokenRefresh(request: Request, response: Response) {
     const refreshToken = request.headers.refreshtoken;
-    if (!refreshToken)
+    if (!refreshToken) {
       throw new BadRequestException(
         'The refreshToken field in the request header is undefined',
       );
+    }
 
     try {
       const { sub, exp } = this.jwtService.verify(refreshToken as string);
