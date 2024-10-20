@@ -6,6 +6,7 @@ import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from '@prisma/client';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
@@ -15,7 +16,6 @@ export class UsersController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
   getMe(@CurrentUser() user: Partial<User>) {
     return user;
   }

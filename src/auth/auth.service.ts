@@ -1,12 +1,19 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { User } from '@prisma/client';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import ms from 'ms';
 import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from './token-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { randomUUID } from 'crypto';
+
+const AuthKey = 'Authentication';
 
 @Injectable()
 export class AuthService {
@@ -30,21 +37,79 @@ export class AuthService {
     const expires = new Date();
     expires.setMilliseconds(
       expires.getMilliseconds() +
-        ms(this.configService.getOrThrow<string>('JWT_EXPIRATION')),
+        ms(this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRATION')),
     );
 
     const tokenPayload: TokenPayload = {
-      userId: user.id,
+      sub: user.id,
     };
-
-    const token = this.jwtService.sign(tokenPayload);
-
-    response.cookie('Authentication', token, {
+    const accessToken = this.createAccessToken(tokenPayload);
+    response.cookie(AuthKey, accessToken, {
       secure: true,
       httpOnly: true,
       expires,
     });
 
-    return { tokenPayload };
+    tokenPayload.jti = randomUUID();
+    const refreshToken = this.createRefreshToken(tokenPayload);
+
+    return { accessToken, refreshToken };
+  }
+
+  private createAccessToken(tokenPayload: TokenPayload): string {
+    return this.jwtService.sign(tokenPayload);
+  }
+
+  private createRefreshToken(tokenPayload: TokenPayload): string {
+    return this.jwtService.sign(tokenPayload, {
+      expiresIn: this.configService.getOrThrow<string>(
+        'JWT_REFRESH_EXPIRATION',
+      ),
+    });
+  }
+
+  async tokenRefresh(request: Request, response: Response) {
+    const refreshToken = request.headers.refreshtoken;
+    if (!refreshToken)
+      throw new BadRequestException(
+        'The refreshToken field in the request header is undefined',
+      );
+
+    try {
+      const { sub, exp } = this.jwtService.verify(refreshToken as string);
+
+      const isExpired = exp * 1000 - Date.now() < 0;
+      if (isExpired)
+        throw new UnauthorizedException('Refresh token has expired');
+
+      // Check if refreshToken is blacklisted (optional)
+      // Implement logic to check if the jti (JWT ID) is present in a blacklist
+      // If blacklisted, throw an UnauthorizedException
+
+      // Fetch the user based on userId (sub) from the database
+      const user = await this.usersService.getUser({ id: sub });
+
+      // Generate a new accessToken
+      const newTokenPayload: TokenPayload = { sub: user.id };
+      const newAccessToken = this.createAccessToken(newTokenPayload);
+
+      const expires = new Date();
+      expires.setMilliseconds(
+        expires.getMilliseconds() +
+          ms(this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRATION')),
+      );
+
+      // Return the new accessToken
+      response.cookie(AuthKey, newAccessToken, {
+        secure: true,
+        httpOnly: true,
+        expires,
+      });
+
+      return { accessToken: newAccessToken };
+    } catch (error) {
+      // Handle other errors during verification (e.g., invalid token format)
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 }
