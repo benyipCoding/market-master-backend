@@ -3,7 +3,7 @@ import { CreateUserRequest } from './dto/create-user.request';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
-import { RegularUserSelectField } from 'src/prisma/interfaces';
+import { RegularUserSelectField, SelectType } from 'src/prisma/interfaces';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +31,10 @@ export class UsersService {
     }
   }
 
-  async getUser(filter: Prisma.UserWhereUniqueInput, select?: any) {
+  async getUser(
+    filter: Prisma.UserWhereUniqueInput,
+    select?: SelectType<Record<string, any>>,
+  ) {
     return this.prismaService.user.findUniqueOrThrow({
       where: filter,
       select,
