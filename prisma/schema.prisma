@@ -50,3 +50,20 @@ model User {
   user_type         UserType?
   login_error_count Int       @default(0)
 }
+
+model KLine {
+  id        BigInt   @id
+  symbol    String
+  period    String
+  timestamp DateTime
+  open      Decimal
+  high      Decimal
+  low       Decimal
+  close     Decimal
+  volume    Int?
+  precision Int
+
+  @@index([symbol, period, timestamp], name: "SymbolPeriodTimestampIndex")
+  @@index([symbol], name: "SymbolIndex")
+  @@index([timestamp], name: "TimestampIndex")
+}

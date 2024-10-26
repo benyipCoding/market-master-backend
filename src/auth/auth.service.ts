@@ -75,7 +75,6 @@ export class AuthService {
         'The refreshToken field in the request header is undefined',
       );
     }
-
     try {
       const { sub, exp } = this.jwtService.verify(refreshToken as string);
 

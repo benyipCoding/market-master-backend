@@ -6,9 +6,9 @@ import {
   Post,
   Req,
   Res,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
-import { LocalAuthGuard } from './guards/local-auth.guard';
+// import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CurrentUser } from './current-user.decorator';
 import { User } from '@prisma/client';
 import { Request, Response } from 'express';
@@ -18,7 +18,6 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
   login(
@@ -29,6 +28,7 @@ export class AuthController {
   }
 
   @Get('token-refresh')
+  // @UseGuards(LocalAuthGuard)
   tokenRefresh(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
