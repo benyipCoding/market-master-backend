@@ -14,7 +14,7 @@ async function bootstrap() {
   app.useStaticAssets('public', {
     prefix: '/static',
   });
-  app.enableCors();
+  app.setGlobalPrefix('api');
 
   await app.listen(app.get(ConfigService).getOrThrow('PORT'));
 }

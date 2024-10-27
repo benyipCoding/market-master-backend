@@ -14,6 +14,7 @@ import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 
 const AuthKey = 'Authentication';
+const RefreshKey = 'RefreshToken';
 
 @Injectable()
 export class AuthService {
@@ -43,6 +44,7 @@ export class AuthService {
     const tokenPayload: TokenPayload = {
       sub: user.id,
     };
+    // Access token
     const accessToken = this.createAccessToken(tokenPayload);
     response.cookie(AuthKey, accessToken, {
       secure: true,
@@ -50,8 +52,19 @@ export class AuthService {
       expires,
     });
 
+    // Refresh token
     tokenPayload.jti = randomUUID();
     const refreshToken = this.createRefreshToken(tokenPayload);
+    const refreshExpires = new Date();
+    expires.setMilliseconds(
+      expires.getMilliseconds() +
+        ms(this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRATION')),
+    );
+    response.cookie(RefreshKey, refreshToken, {
+      secure: true,
+      httpOnly: true,
+      expires: refreshExpires,
+    });
 
     return { accessToken, refreshToken };
   }
