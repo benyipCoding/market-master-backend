@@ -8,8 +8,8 @@ import { KLineService } from './k-line.service';
 export class KLineController {
   constructor(private readonly kLineService: KLineService) {}
 
-  @Post()
+  @Post('bulk')
   create(@Body() createKLineDto: CreateKlineDto) {
-    this.kLineService.create(createKLineDto);
+    return this.kLineService.bulkCreate(createKLineDto);
   }
 }

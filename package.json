@@ -40,7 +40,8 @@
     "pino-http": "^10.3.0",
     "prisma": "^5.21.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "snowflake-id": "^1.1.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

@@ -52,10 +52,10 @@ model User {
 }
 
 model KLine {
-  id        BigInt   @id
+  id        BigInt  @id
   symbol    String
   period    String
-  timestamp DateTime
+  timestamp BigInt
   open      Decimal
   high      Decimal
   low       Decimal
