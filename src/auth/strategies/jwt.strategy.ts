@@ -5,7 +5,7 @@ import { Request } from 'express';
 import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 import { TokenPayload } from '../token-payload.interface';
 import { UsersService } from 'src/users/users.service';
-import { RegularUserSelectField } from 'src/prisma/interfaces';
+import { RegularUserSelectField, SelectType } from 'src/prisma/interfaces';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   async validate(payload: TokenPayload) {
     const user = await this.usersService.getUser(
       { id: payload.sub },
-      RegularUserSelectField,
+      RegularUserSelectField as SelectType,
     );
     return user;
   }

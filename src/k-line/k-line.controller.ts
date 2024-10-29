@@ -12,4 +12,7 @@ export class KLineController {
   create(@Body() createKLineDto: CreateKlineDto) {
     return this.kLineService.bulkCreate(createKLineDto);
   }
+
+  @Post('symbol-category')
+  createSymbolCategory() {}
 }

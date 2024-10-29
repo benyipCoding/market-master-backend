@@ -31,10 +31,7 @@ export class UsersService {
     }
   }
 
-  async getUser(
-    filter: Prisma.UserWhereUniqueInput,
-    select?: SelectType<Record<string, any>>,
-  ) {
+  async getUser(filter: Prisma.UserWhereUniqueInput, select?: SelectType) {
     return this.prismaService.user.findUniqueOrThrow({
       where: filter,
       select,

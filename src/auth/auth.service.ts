@@ -25,7 +25,9 @@ export class AuthService {
   ) {}
   async verifyUser(email: string, password: string) {
     try {
-      const user = await this.usersService.getUser({ email });
+      const user = await this.usersService.getUser({
+        email,
+      });
       const authenticated = await bcrypt.compare(password, user.password);
       if (!authenticated) throw new UnauthorizedException();
       return user;
@@ -100,7 +102,9 @@ export class AuthService {
       // If blacklisted, throw an UnauthorizedException
 
       // Fetch the user based on userId (sub) from the database
-      const user = await this.usersService.getUser({ id: sub });
+      const user = await this.usersService.getUser({
+        id: sub,
+      });
 
       // Generate a new accessToken
       const newTokenPayload: TokenPayload = { sub: user.id };

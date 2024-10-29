@@ -38,10 +38,9 @@ model User {
   is_staff          Boolean   @default(false)
   is_active         Boolean   @default(false)
   date_joined       DateTime?
-  description       String?
+  description       String?   @db.VarChar(255)
   update_at         DateTime  @updatedAt()
   create_at         DateTime  @default(now())
-  modifier_id       String?
   username          String?   @unique
   mobile            String?   @unique
   avatar            String?
@@ -49,21 +48,48 @@ model User {
   gender            Gender?
   user_type         UserType?
   login_error_count Int       @default(0)
+  KLine             KLine[]
 }
 
 model KLine {
-  id        BigInt  @id
-  symbol    String
-  period    String
-  timestamp BigInt
-  open      Decimal
-  high      Decimal
-  low       Decimal
-  close     Decimal
-  volume    Int?
-  precision Int
+  id         BigInt   @id
+  symbol_id  Int
+  symbol     Symbol   @relation(fields: [symbol_id], references: [id], onDelete: Cascade)
+  period_id  Int
+  period     Period   @relation(fields: [period_id], references: [id], onDelete: Cascade)
+  timestamp  DateTime @db.Timestamp()
+  open       Decimal  @db.Decimal(20, 10)
+  high       Decimal  @db.Decimal(20, 10)
+  low        Decimal  @db.Decimal(20, 10)
+  close      Decimal  @db.Decimal(20, 10)
+  volume     Int?
+  precision  Int
+  creator_id String
+  creator    User     @relation(fields: [creator_id], references: [id], onDelete: SetDefault)
 
-  @@index([symbol, period, timestamp], name: "SymbolPeriodTimestampIndex")
-  @@index([symbol], name: "SymbolIndex")
+  @@unique([symbol_id, period_id, timestamp])
+  @@index([symbol_id, period_id, timestamp], name: "SymbolPeriodTimestampIndex")
+  @@index([symbol_id], name: "SymbolIndex")
   @@index([timestamp], name: "TimestampIndex")
+}
+
+model SymbolCategory {
+  id      Int      @id @default(autoincrement())
+  name_zh String   @unique
+  name_en String   @unique
+  symbols Symbol[]
+}
+
+model Period {
+  id     Int     @id @default(autoincrement())
+  label  String  @unique
+  KLines KLine[]
+}
+
+model Symbol {
+  id          Int            @id @default(autoincrement())
+  label       String         @unique
+  category_id Int
+  category    SymbolCategory @relation(fields: [category_id], references: [id], onDelete: SetDefault)
+  KLines      KLine[]
 }

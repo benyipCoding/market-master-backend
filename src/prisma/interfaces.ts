@@ -1,10 +1,8 @@
 import { User } from '@prisma/client';
 
-export type SelectType<T> = {
-  [k in keyof T]: boolean;
-};
+export type SelectType = Record<keyof User, boolean>;
 
-export const RegularUserSelectField: SelectType<Omit<User, 'password'>> = {
+export const RegularUserSelectField: Omit<SelectType, 'password'> = {
   avatar: true,
   create_at: true,
   id: true,
@@ -18,7 +16,6 @@ export const RegularUserSelectField: SelectType<Omit<User, 'password'>> = {
   date_joined: true,
   description: true,
   update_at: true,
-  modifier_id: true,
   username: true,
   mobile: true,
   display_name: true,
