@@ -3,6 +3,8 @@ import { CreateKlineDto } from './dto/create-kline.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 // import { KLine } from '@prisma/client';
 import { SnowflakeService } from './snowflake.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { CreatePeriodDto } from './dto/create-period.dto';
 
 @Injectable()
 export class KLineService {
@@ -26,5 +28,21 @@ export class KLineService {
     //   data,
     // });
     return 'OK';
+  }
+
+  async createCategory(dto: CreateCategoryDto) {
+    return this.prismaService.symbolCategory.create({
+      data: {
+        name: dto.name,
+      },
+    });
+  }
+
+  async createPeriod(dto: CreatePeriodDto) {
+    return this.prismaService.period.create({
+      data: {
+        label: dto.label,
+      },
+    });
   }
 }

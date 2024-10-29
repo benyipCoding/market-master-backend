@@ -75,8 +75,7 @@ model KLine {
 
 model SymbolCategory {
   id      Int      @id @default(autoincrement())
-  name_zh String   @unique
-  name_en String   @unique
+  name    String   @unique
   symbols Symbol[]
 }
 
