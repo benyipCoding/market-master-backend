@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateKlineDto } from './dto/create-kline.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SnowflakeService } from './snowflake.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class KLineService {
@@ -10,8 +11,9 @@ export class KLineService {
     private readonly snowflakeService: SnowflakeService,
   ) {}
 
-  async bulkCreate(createKLineDto: CreateKlineDto) {
+  async bulkCreate(createKLineDto: CreateKlineDto, user: User) {
     console.log(createKLineDto);
+    console.log(user);
 
     // const data: KLine[] = createKLineDto.data.map((item) => ({
     //   ...item,

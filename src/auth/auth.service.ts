@@ -94,8 +94,7 @@ export class AuthService {
       const { sub, exp } = this.jwtService.verify(refreshToken as string);
 
       const isExpired = exp * 1000 - Date.now() < 0;
-      if (isExpired)
-        throw new UnauthorizedException('Refresh token has expired');
+      if (isExpired) throw new BadRequestException('Refresh token has expired');
 
       // Check if refreshToken is blacklisted (optional)
       // Implement logic to check if the jti (JWT ID) is present in a blacklist
@@ -126,7 +125,7 @@ export class AuthService {
       return { accessToken: newAccessToken };
     } catch (error) {
       // Handle other errors during verification (e.g., invalid token format)
-      throw new UnauthorizedException('Invalid refresh token');
+      throw new BadRequestException('Invalid refresh token');
     }
   }
 }

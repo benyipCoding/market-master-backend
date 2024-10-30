@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateSymbolDto } from './dto/create-symbol.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -19,6 +19,13 @@ export class SymbolController {
           },
         },
       },
+    });
+  }
+
+  @Get()
+  async list() {
+    return await this.prismaService.symbol.findMany({
+      select: { id: true, label: true },
     });
   }
 }
