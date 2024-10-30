@@ -76,18 +76,21 @@ model KLine {
 model SymbolCategory {
   id      Int      @id @default(autoincrement())
   name    String   @unique
+  sort    Int?
   symbols Symbol[]
 }
 
 model Period {
   id     Int     @id @default(autoincrement())
   label  String  @unique
+  sort   Int?
   KLines KLine[]
 }
 
 model Symbol {
   id          Int            @id @default(autoincrement())
   label       String         @unique
+  sort        Int?
   category_id Int
   category    SymbolCategory @relation(fields: [category_id], references: [id], onDelete: SetDefault)
   KLines      KLine[]
