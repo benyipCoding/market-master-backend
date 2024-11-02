@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreatePeriodDto } from './dto/create-period.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -13,6 +13,16 @@ export class PeriodController {
     return await this.prismaService.period.create({
       data: {
         label: createPeriodDto.label,
+      },
+    });
+  }
+
+  @Get()
+  async list() {
+    return await this.prismaService.period.findMany({
+      select: {
+        id: true,
+        label: true,
       },
     });
   }

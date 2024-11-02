@@ -52,20 +52,20 @@ model User {
 }
 
 model KLine {
-  id         BigInt   @id
+  id         BigInt  @id
   symbol_id  Int
-  symbol     Symbol   @relation(fields: [symbol_id], references: [id], onDelete: Cascade)
+  symbol     Symbol  @relation(fields: [symbol_id], references: [id], onDelete: Cascade)
   period_id  Int
-  period     Period   @relation(fields: [period_id], references: [id], onDelete: Cascade)
-  timestamp  DateTime @db.Timestamp()
-  open       Decimal  @db.Decimal(20, 10)
-  high       Decimal  @db.Decimal(20, 10)
-  low        Decimal  @db.Decimal(20, 10)
-  close      Decimal  @db.Decimal(20, 10)
+  period     Period  @relation(fields: [period_id], references: [id], onDelete: Cascade)
+  timestamp  BigInt
+  open       Decimal @db.Decimal(20, 10)
+  high       Decimal @db.Decimal(20, 10)
+  low        Decimal @db.Decimal(20, 10)
+  close      Decimal @db.Decimal(20, 10)
   volume     Int?
   precision  Int
   creator_id String
-  creator    User     @relation(fields: [creator_id], references: [id], onDelete: SetDefault)
+  creator    User    @relation(fields: [creator_id], references: [id], onDelete: SetDefault)
 
   @@unique([symbol_id, period_id, timestamp])
   @@index([symbol_id, period_id, timestamp], name: "SymbolPeriodTimestampIndex")

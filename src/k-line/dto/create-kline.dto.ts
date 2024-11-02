@@ -1,12 +1,6 @@
 import { KLine } from '@prisma/client';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsNumber,
-  IsString,
-  IsUppercase,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsNumber, ValidateNested } from 'class-validator';
 
 export class KLineDto {
   @IsNumber()
@@ -37,12 +31,11 @@ export class CreateKlineDto {
     'open' | 'high' | 'low' | 'close' | 'timestamp' | 'volume'
   >[];
 
-  @IsString()
-  @IsUppercase()
-  symbol: string;
+  @IsNumber()
+  symbol: number;
 
-  @IsString()
-  period: string;
+  @IsNumber()
+  period: number;
 
   @IsNumber()
   precision: number;
