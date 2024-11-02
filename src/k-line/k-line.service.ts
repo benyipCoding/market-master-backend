@@ -62,4 +62,14 @@ export class KLineService {
 
     return formattedData;
   }
+
+  async deleteMeaninglessData() {
+    return this.prismaService.kLine.deleteMany({
+      where: {
+        timestamp: {
+          lt: 757353600000, // 删除1994-1-1之前的所有数据
+        },
+      },
+    });
+  }
 }

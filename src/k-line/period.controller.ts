@@ -24,6 +24,9 @@ export class PeriodController {
         id: true,
         label: true,
       },
+      orderBy: {
+        sort: 'asc',
+      },
     });
   }
 }
