@@ -12,7 +12,7 @@ export class KLineService {
     private readonly snowflakeService: SnowflakeService,
   ) {}
 
-  bulkCreate(createKLineDto: CreateKlineDto, user: User) {
+  async bulkCreate(createKLineDto: CreateKlineDto, user: User) {
     const data: KLine[] = createKLineDto.data.map((item) => ({
       id: this.snowflakeService.generateId(),
       ...item,
@@ -21,10 +21,14 @@ export class KLineService {
       creator_id: user.id,
       precision: createKLineDto.precision,
     }));
-
-    return this.prismaService.kLine.createMany({
-      data,
-    });
+    try {
+      await this.prismaService.kLine.createMany({
+        data,
+      });
+      return 'success';
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   async list(dto: ListKlineDto) {
