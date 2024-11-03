@@ -74,10 +74,13 @@ model KLine {
 }
 
 model SymbolCategory {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  sort    Int?
-  symbols Symbol[]
+  id        Int              @id @default(autoincrement())
+  name      String           @unique
+  sort      Int?
+  symbols   Symbol[]
+  parent_id Int?
+  parent    SymbolCategory?  @relation("parent", fields: [parent_id], references: [id])
+  children  SymbolCategory[] @relation("parent")
 }
 
 model Period {
@@ -94,4 +97,6 @@ model Symbol {
   category_id Int
   category    SymbolCategory @relation(fields: [category_id], references: [id], onDelete: SetDefault)
   KLines      KLine[]
+  description String?
+  icon        String?
 }

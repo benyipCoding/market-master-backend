@@ -13,19 +13,48 @@ export class KLineService {
   ) {}
 
   async bulkCreate(createKLineDto: CreateKlineDto, user: User) {
-    const data: KLine[] = createKLineDto.data.map((item) => ({
-      id: this.snowflakeService.generateId(),
-      ...item,
-      symbol_id: createKLineDto.symbol,
-      period_id: createKLineDto.period,
-      creator_id: user.id,
-      precision: createKLineDto.precision,
-    }));
+    const filterData: KLine[] = [];
+    const tasks: Promise<KLine | void>[] = [];
+
+    for (const item of createKLineDto.data) {
+      const promise = this.prismaService.kLine.findUnique({
+        where: {
+          symbol_id_period_id_timestamp: {
+            symbol_id: createKLineDto.symbol,
+            period_id: createKLineDto.period,
+            timestamp: item.timestamp,
+          },
+        },
+      });
+
+      const _fulfilled = (res: KLine | null) => {
+        if (res) return;
+        const kline: KLine = {
+          id: this.snowflakeService.generateId(),
+          ...item,
+          symbol_id: createKLineDto.symbol,
+          period_id: createKLineDto.period,
+          creator_id: user.id,
+          precision: createKLineDto.precision,
+        };
+
+        filterData.push(kline);
+      };
+
+      promise.then(_fulfilled);
+      tasks.push(promise);
+    }
+
+    await Promise.all(tasks);
+
+    if (!filterData.length) return 'Data is already existed';
+
     try {
       await this.prismaService.kLine.createMany({
-        data,
+        data: filterData,
       });
-      return 'success';
+
+      return 'Success';
     } catch (error) {
       throw new Error(error.message);
     }
