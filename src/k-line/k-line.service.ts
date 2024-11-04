@@ -13,7 +13,7 @@ export class KLineService {
   ) {}
 
   async bulkCreate(createKLineDto: CreateKlineDto, user: User) {
-    const filterData: KLine[] = [];
+    const filterData: any[] = [];
     const tasks: Promise<KLine | void>[] = [];
 
     for (const item of createKLineDto.data) {
@@ -29,7 +29,7 @@ export class KLineService {
 
       const _fulfilled = (res: KLine | null) => {
         if (res) return;
-        const kline: KLine = {
+        const kline = {
           id: this.snowflakeService.generateId(),
           ...item,
           symbol_id: createKLineDto.symbol,
@@ -75,6 +75,7 @@ export class KLineService {
         timestamp: true,
         volume: true,
         precision: true,
+        create_at: true,
       },
     });
 
