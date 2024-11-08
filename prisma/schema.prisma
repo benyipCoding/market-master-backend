@@ -16,7 +16,6 @@ datasource db {
 enum Gender {
   Male
   Female
-  Other
 }
 
 enum UserType {
@@ -49,6 +48,15 @@ model User {
   user_type         UserType?
   login_error_count Int       @default(0)
   KLine             KLine[]
+  profile           Profile?
+}
+
+model Profile {
+  id          Int      @id @default(autoincrement())
+  user_id     String   @unique
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  fav_sym_ids Int[]
+  fav_syms    Symbol[]
 }
 
 model KLine {
@@ -93,12 +101,14 @@ model Period {
 }
 
 model Symbol {
-  id          Int            @id @default(autoincrement())
-  label       String         @unique
-  sort        Int?
-  category_id Int
-  category    SymbolCategory @relation(fields: [category_id], references: [id], onDelete: SetDefault)
-  KLines      KLine[]
-  description String?
-  icon        String?
+  id                Int            @id @default(autoincrement())
+  label             String         @unique
+  sort              Int?
+  category_id       Int
+  category          SymbolCategory @relation(fields: [category_id], references: [id], onDelete: SetDefault)
+  KLines            KLine[]
+  description       String?
+  icon              String?
+  basic_point_place Int? // 小数点后的第 X 位是基本点
+  profiles          Profile[]
 }

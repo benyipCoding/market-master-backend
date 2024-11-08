@@ -25,7 +25,13 @@ export class SymbolController {
   @Get()
   async list() {
     return await this.prismaService.symbol.findMany({
-      select: { id: true, label: true },
+      select: {
+        id: true,
+        label: true,
+        category_id: true,
+        description: true,
+        basic_point_place: true,
+      },
     });
   }
 }
