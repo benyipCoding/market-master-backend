@@ -31,6 +31,8 @@ export class SymbolController {
         category_id: true,
         description: true,
         basic_point_place: true,
+        minMove: true,
+        precision: true,
       },
     });
   }

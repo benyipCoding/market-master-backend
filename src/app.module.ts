@@ -5,6 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from './auth/auth.module';
 import { KLineModule } from './k-line/k-line.module';
 import { UploadModule } from './upload/upload.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UploadModule } from './upload/upload.module';
     AuthModule,
     KLineModule,
     UploadModule,
+    ProfileModule,
   ],
   controllers: [],
   providers: [],

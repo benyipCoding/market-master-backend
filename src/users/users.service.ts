@@ -4,13 +4,17 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { RegularUserSelectField, SelectType } from 'src/prisma/interfaces';
+import { ProfileService } from 'src/profile/profile.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly profileService: ProfileService,
+  ) {}
   async createUser(data: CreateUserRequest): Promise<Partial<User>> {
     try {
-      return await this.prismaService.user.create({
+      const user = await this.prismaService.user.create({
         data: {
           ...data,
           password: await bcrypt.hash(data.password, 10),
@@ -19,6 +23,10 @@ export class UsersService {
         },
         select: RegularUserSelectField,
       });
+
+      await this.profileService.create(user.id);
+
+      return user;
     } catch (err) {
       // P2002是prisma内部的唯一性约束冲突代号
       if (err.code === 'P2002') {

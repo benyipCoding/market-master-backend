@@ -111,4 +111,6 @@ model Symbol {
   icon              String?
   basic_point_place Int? // 小数点后的第 X 位是基本点
   profiles          Profile[]
+  precision         Int?
+  minMove           Float?
 }

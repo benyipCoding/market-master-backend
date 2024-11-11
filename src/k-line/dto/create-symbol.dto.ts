@@ -6,4 +6,10 @@ export class CreateSymbolDto {
 
   @IsNumber()
   categoryId?: number;
+
+  @IsNumber()
+  precision: number;
+
+  @IsNumber()
+  minMove: number;
 }

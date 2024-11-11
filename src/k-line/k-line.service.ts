@@ -77,6 +77,9 @@ export class KLineService {
         precision: true,
         create_at: true,
       },
+      orderBy: {
+        timestamp: 'desc',
+      },
     });
 
     // 转换 BigInt 字段为字符串
