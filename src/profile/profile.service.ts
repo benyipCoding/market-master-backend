@@ -15,6 +15,35 @@ export class ProfileService {
   }
 
   async addSymbolToFavourite(user: User, symbol_id: number) {
-    return `User: ${user.display_name}. Symbol: ${symbol_id}`;
+    try {
+      // 查询当前用户的profile的收藏symbols里有没有目标symbol
+      const profile = await this.prismaService.profile.findUnique({
+        where: {
+          user_id: user.id,
+        },
+      });
+      const isExisted = profile.fav_sym_ids.some(
+        (symId) => symId === symbol_id,
+      );
+
+      if (isExisted)
+        await this.prismaService.profile.update({
+          where: { id: profile.id },
+          data: {
+            fav_sym_ids: profile.fav_sym_ids.filter((id) => id !== symbol_id),
+          },
+        });
+      else
+        await this.prismaService.profile.update({
+          where: { id: profile.id },
+          data: {
+            fav_sym_ids: [...profile.fav_sym_ids, symbol_id],
+          },
+        });
+
+      return `Success`;
+    } catch (error) {
+      throw new Error('Internal Error in addSymbolToFavourite function');
+    }
   }
 }
