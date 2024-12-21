@@ -1,5 +1,5 @@
 # 使用 Node.js 官方镜像作为基础镜像
-FROM node:20 AS build
+FROM node:20
 
 # 设置工作目录
 WORKDIR /app
@@ -14,15 +14,9 @@ COPY . .
 # 编译项目
 RUN npm run build
 
-# 生产环境镜像
-FROM node:20-slim
-
-# 设置工作目录
-WORKDIR /app
-
 # 复制构建后的文件
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
+COPY /app/dist ./dist
+COPY /app/node_modules ./node_modules
 
 # 暴露应用的端口
 EXPOSE 3000
