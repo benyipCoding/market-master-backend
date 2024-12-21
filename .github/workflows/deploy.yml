@@ -1,0 +1,26 @@
+name: Deploy Market-Master-Backend to Server
+
+on:
+  push:
+    branches:
+      - main  # 监听 main 分支
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Pull code
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@42.193.192.227 << 'EOF'
+        cd /home/market-master/market-master-backend/
+        git pull origin main       
+        EOF
