@@ -5,3 +5,14 @@ on:
     branches:
       - main  # 监听 main 分支
 
+jobs:
+  test1:
+    runs-on: ubuntu-latest
+    steps:
+    - run: pwd
+    - run: ls
+  test2:
+    runs-on: windows-latest
+    steps:
+    - run: node --version
+
