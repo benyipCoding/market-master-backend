@@ -17,13 +17,15 @@ jobs:
         USER: ${{ secrets.USER }}
         REMOTE_DIR: ${{ secrets.REMOTE_DIR }}
       run:
-        sudo mkdir ~/.ssh
+        sudo mkdir -p ~/.ssh
         sudo echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
         sudo chmod 600 ~/.ssh/id_ed25519
+        
+        ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
         ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
           cd $REMOTE_DIR
-          sudo mkdir ./test_demo
+          sudo mkdir -p ./test_demo
         EOF
     
     
