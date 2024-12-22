@@ -30,7 +30,7 @@ jobs:
         HOST: ${{ secrets.HOST }}
         USER: ${{ secrets.USER }}
       run:
-        echo $SSH_PRIVATE_KEY
+        echo $HOST
     
     
 
