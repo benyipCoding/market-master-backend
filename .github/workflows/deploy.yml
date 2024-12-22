@@ -29,8 +29,12 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.HOST }}
         USER: ${{ secrets.USER }}
+        REMOTE_DIR: ${{ secrets.REMOTE_DIR }}
       run:
-        echo $HOST
+        ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
+          cd $REMOTE_DIR
+          sudo mkdir test
+        EOF
     
     
 
