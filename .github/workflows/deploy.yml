@@ -27,6 +27,8 @@ jobs:
     - name: 部署到云服务器
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.HOST }}
+        USER: ${{ secrets.USER }}
       run:
         echo $SSH_PRIVATE_KEY
     
