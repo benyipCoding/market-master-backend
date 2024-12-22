@@ -10,19 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 读取仓库内容
-      uses: actions/checkout@v4
+    # - name: 读取仓库内容
+    #   uses: actions/checkout@v4
 
-    - name: 设置 Node.js 环境
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
+    # - name: 设置 Node.js 环境
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: 20
     
-    - name: 安装依赖
-      run: npm install
+    # - name: 安装依赖
+    #   run: npm install
 
-    - name: 打包项目
-      run: npm run build
+    # - name: 打包项目
+    #   run: npm run build
 
     - name: 部署到云服务器
       env:
