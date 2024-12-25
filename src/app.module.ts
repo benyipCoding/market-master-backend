@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { KLineModule } from './k-line/k-line.module';
 import { UploadModule } from './upload/upload.module';
 import { ProfileModule } from './profile/profile.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { ProfileModule } from './profile/profile.module';
     UploadModule,
     ProfileModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
