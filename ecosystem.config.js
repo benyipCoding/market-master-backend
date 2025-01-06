@@ -7,7 +7,7 @@ module.exports = {
       // exec_mode: "cluster", // 集群模式
       watch: false, // 是否监听文件变化自动重启
       env: {
-        NODE_ENV: 'prod', // 开发环境变量
+        NODE_ENV: 'production', // 开发环境变量
       },
       env_production: {
         NODE_ENV: 'production', // 生产环境变量
