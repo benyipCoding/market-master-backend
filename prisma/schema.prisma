@@ -52,11 +52,11 @@ model User {
 }
 
 model Profile {
-  id          Int      @id @default(autoincrement())
-  user_id     String   @unique
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id          Int    @id @default(autoincrement())
+  user_id     String @unique
+  user        User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   fav_sym_ids Int[]
-  fav_syms    Symbol[]
+  // fav_syms    Symbol[]
 }
 
 model KLine {
@@ -110,7 +110,7 @@ model Symbol {
   description       String?
   icon              String?
   basic_point_place Int? // 小数点后的第 X 位是基本点
-  profiles          Profile[]
+  // profiles          Profile[]
   precision         Int?
   minMove           Float?
 }

@@ -49,7 +49,7 @@ export class AuthService {
     // Access token
     const accessToken = this.createAccessToken(tokenPayload);
     response.cookie(AuthKey, accessToken, {
-      // secure: true,
+      secure: true,
       httpOnly: true,
       expires,
     });
@@ -63,7 +63,7 @@ export class AuthService {
         ms(this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRATION')),
     );
     response.cookie(RefreshKey, refreshToken, {
-      // secure: true,
+      secure: true,
       httpOnly: true,
       expires: refreshExpires,
     });
@@ -117,7 +117,7 @@ export class AuthService {
 
       // Return the new accessToken
       response.cookie(AuthKey, newAccessToken, {
-        // secure: true,
+        secure: true,
         httpOnly: true,
         expires,
       });
