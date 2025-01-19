@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'market-master-backend', // 应用名称
       script: 'dist/main.js', // 启动脚本
-      instances: 1, // 启用集群模式，实例数为 CPU 核心数
+      // instances: 1, // 启用集群模式，实例数为 CPU 核心数
       // exec_mode: "cluster", // 集群模式
       watch: false, // 是否监听文件变化自动重启
       env: {
