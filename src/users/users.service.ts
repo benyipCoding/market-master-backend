@@ -18,7 +18,7 @@ export class UsersService {
         data: {
           ...data,
           password: await bcrypt.hash(data.password, 10),
-          display_name: data.email,
+          display_name: data.first_name + ' ' + data.last_name,
           username: data.email,
         },
         select: RegularUserSelectField,
@@ -34,7 +34,6 @@ export class UsersService {
           `${err.meta.target[0]} already exists.`,
         );
       }
-
       throw err;
     }
   }
