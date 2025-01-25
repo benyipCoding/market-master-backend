@@ -23,7 +23,8 @@ async function bootstrap() {
     prefix: '/static',
   });
   app.setGlobalPrefix('api');
-
+  app.get(ConfigService).getOrThrow('NODE_ENV') === 'development' &&
+    app.enableCors();
   await app.listen(app.get(ConfigService).getOrThrow('PORT'));
 }
 bootstrap();
