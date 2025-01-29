@@ -91,6 +91,7 @@ export class KLineService {
       close: +k.close,
       id: k.id.toString(),
       timestamp: +k.timestamp.toString(),
+      volume: +k.volume.toString(),
     }));
 
     return formattedData;

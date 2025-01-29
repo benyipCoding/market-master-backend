@@ -70,7 +70,7 @@ model KLine {
   high       Decimal  @db.Decimal(20, 10)
   low        Decimal  @db.Decimal(20, 10)
   close      Decimal  @db.Decimal(20, 10)
-  volume     Int?
+  volume     BigInt?
   precision  Int
   creator_id String
   creator    User     @relation(fields: [creator_id], references: [id], onDelete: SetDefault)
