@@ -49,6 +49,7 @@ model User {
   login_error_count Int       @default(0)
   KLine             KLine[]
   profile           Profile?
+  Order             Order[]
 }
 
 model Profile {
@@ -113,4 +114,42 @@ model Symbol {
   // profiles          Profile[]
   precision         Int?
   minMove           Float?
+}
+
+model Order {
+  id            BigInt      @id // 用雪花ID
+  user_id       String
+  user          User        @relation(fields: [user_id], references: [id])
+  symbol_id     Int
+  order_type    OrderType
+  side          OrderSide
+  opening_price Decimal     @db.Decimal(20, 10) // 开仓价
+  closing_price Decimal     @db.Decimal(20, 10) // 平仓价
+  quantity      BigInt
+  status        OrderStatus
+  create_at     DateTime    @default(now())
+  update_at     DateTime    @updatedAt()
+  executed_time DateTime? // 执行时间，挂单未执行时为空
+  expiry_time   DateTime? // 订单过期时间
+  comment       String? // 备注
+  limit_price   Decimal     @db.Decimal(20, 10) // 止盈价
+  stop_price    Decimal     @db.Decimal(20, 10) // 止损价
+
+  @@index([user_id]) // 索引：根据用户ID查找订单
+}
+
+enum OrderType {
+  market
+  limit
+}
+
+enum OrderSide {
+  buy
+  sell
+}
+
+enum OrderStatus {
+  pending
+  executed
+  cancelled
 }
