@@ -7,6 +7,7 @@ import { KLineModule } from './k-line/k-line.module';
 import { UploadModule } from './upload/upload.module';
 import { ProfileModule } from './profile/profile.module';
 import { AppController } from './app.controller';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AppController } from './app.controller';
     KLineModule,
     UploadModule,
     ProfileModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [],
