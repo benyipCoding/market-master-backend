@@ -1,9 +1,10 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from '@prisma/client';
 import { CurrentUser } from 'src/auth/current-user.decorator';
+import { ListOrderDto } from './dto/list-order.dto';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
@@ -13,5 +14,10 @@ export class OrdersController {
   @Post()
   create(@CurrentUser() user: User, @Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.create(user, createOrderDto);
+  }
+
+  @Get()
+  list(@CurrentUser() user: User, @Query() listOrderDto: ListOrderDto) {
+    return this.ordersService.list(user, listOrderDto);
   }
 }

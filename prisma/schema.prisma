@@ -26,6 +26,11 @@ enum UserType {
   Anonymous
 }
 
+enum OperationMode {
+  Practise
+  Blindbox
+}
+
 model User {
   id                String    @id @default(uuid())
   email             String    @unique
@@ -117,24 +122,25 @@ model Symbol {
 }
 
 model Order {
-  id            BigInt      @id
-  user_id       String
-  user          User        @relation(fields: [user_id], references: [id])
-  symbol_id     Int
-  order_type    OrderType
-  side          OrderSide
-  opening_price Decimal     @db.Decimal(20, 10) // 开仓价
-  closing_price Decimal?    @db.Decimal(20, 10) // 平仓价
-  quantity      BigInt
-  status        OrderStatus
-  create_at     DateTime    @default(now())
-  update_at     DateTime    @updatedAt()
-  executed_time DateTime? // 执行时间，挂单未执行时为空
-  expiry_time   DateTime? // 订单过期时间
-  comment       String? // 备注
-  limit_price   Decimal?    @db.Decimal(20, 10) // 止盈价
-  stop_price    Decimal?    @db.Decimal(20, 10) // 止损价
-  time          BigInt // 对应K线上的timestamp字段 用于定位复盘时的订单是在哪根K线上
+  id             BigInt        @id
+  user_id        String
+  user           User          @relation(fields: [user_id], references: [id])
+  symbol_id      Int
+  order_type     OrderType
+  side           OrderSide
+  opening_price  Decimal       @db.Decimal(20, 10) // 开仓价
+  closing_price  Decimal?      @db.Decimal(20, 10) // 平仓价
+  quantity       BigInt
+  status         OrderStatus
+  create_at      DateTime      @default(now())
+  update_at      DateTime      @updatedAt()
+  executed_time  DateTime? // 执行时间，挂单未执行时为空
+  expiry_time    DateTime? // 订单过期时间
+  comment        String? // 备注
+  limit_price    Decimal?      @db.Decimal(20, 10) // 止盈价
+  stop_price     Decimal?      @db.Decimal(20, 10) // 止损价
+  time           BigInt // 对应K线上的timestamp字段 用于定位复盘时的订单是在哪根K线上
+  operation_mode OperationMode
 
   @@index([user_id]) // 索引：根据用户ID查找订单
 }
@@ -153,4 +159,5 @@ enum OrderStatus {
   pending
   executed
   cancelled
+  closed
 }

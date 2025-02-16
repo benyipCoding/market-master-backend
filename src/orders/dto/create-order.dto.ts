@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -20,6 +21,12 @@ export enum OrderStatus {
   PENDING = 'pending',
   EXECUTED = 'executed',
   CANCELLED = 'cancelled',
+  CLOSED = 'closed',
+}
+
+export enum OperationMode {
+  PRACTISE = 'Practise',
+  BLINDBOX = 'Blindbox',
 }
 
 export class CreateOrderDto {
@@ -58,4 +65,12 @@ export class CreateOrderDto {
   @IsNumber()
   @IsNotEmpty()
   time: number;
+
+  @IsDate()
+  @IsOptional()
+  expiry_time?: Date;
+
+  @IsEnum(OperationMode)
+  @IsNotEmpty()
+  operation_mode: OperationMode;
 }
