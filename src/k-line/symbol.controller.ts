@@ -33,6 +33,7 @@ export class SymbolController {
         basic_point_place: true,
         minMove: true,
         precision: true,
+        price_per_tick: true,
       },
     });
   }
