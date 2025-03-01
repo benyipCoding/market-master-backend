@@ -119,6 +119,7 @@ model Symbol {
   // profiles          Profile[]
   precision         Int?
   minMove           Float?
+  price_per_tick    Float? // 1点等于多少价格 
 }
 
 model Order {
