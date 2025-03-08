@@ -22,8 +22,8 @@ export class ProfileController {
   }
 
   @Get()
-  getProfile(@CurrentUser() user: User) {
-    return this.prismaService.profile.findUnique({
+  async getProfile(@CurrentUser() user: User) {
+    return await this.prismaService.profile.findUnique({
       where: { user_id: user.id },
     });
   }

@@ -58,11 +58,11 @@ model User {
 }
 
 model Profile {
-  id          Int    @id @default(autoincrement())
-  user_id     String @unique
-  user        User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id          Int     @id @default(autoincrement())
+  user_id     String  @unique
+  user        User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   fav_sym_ids Int[]
-  // fav_syms    Symbol[]
+  balance     Decimal @default(10000.00) @db.Decimal(20, 2)
 }
 
 model KLine {
