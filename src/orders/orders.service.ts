@@ -29,6 +29,8 @@ export class OrdersService {
         executed_time:
           createOrderDto.order_type === OrderType.MARKET ? new Date() : null,
         operation_mode: createOrderDto.operation_mode,
+        stop_price: createOrderDto.stop_price || null,
+        limit_price: createOrderDto.limit_price || null,
       },
     });
 
