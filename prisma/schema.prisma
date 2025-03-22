@@ -62,7 +62,8 @@ model Profile {
   user_id     String  @unique
   user        User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   fav_sym_ids Int[]
-  balance     Decimal @default(10000.00) @db.Decimal(20, 2)
+  balance_p   Decimal @default(10000.00) @db.Decimal(20, 2) // 练习模式下的余额
+  balance_b   Decimal @default(10000.00) @db.Decimal(20, 2) // 盲盒模式下的余额
 }
 
 model KLine {
