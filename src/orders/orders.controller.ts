@@ -13,6 +13,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from '@prisma/client';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { ListOrderDto } from './dto/list-order.dto';
+import { ParseBigIntPipe } from 'src/pipes/parse-big-int.pipe';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
@@ -30,7 +31,10 @@ export class OrdersController {
   }
 
   @Post('close-pos/:id')
-  closePosition(@CurrentUser() user: User, @Param('id') orderId: string) {
+  closePosition(
+    @CurrentUser() user: User,
+    @Param('id', ParseBigIntPipe) orderId: bigint,
+  ) {
     return this.ordersService.closePosition(user, orderId);
   }
 }

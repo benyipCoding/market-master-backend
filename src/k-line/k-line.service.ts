@@ -82,19 +82,7 @@ export class KLineService {
       },
     });
 
-    // 转换 BigInt 字段为字符串
-    const formattedData = klineData.map((k) => ({
-      ...k,
-      open: +k.open,
-      high: +k.high,
-      low: +k.low,
-      close: +k.close,
-      id: k.id.toString(),
-      timestamp: +k.timestamp.toString(),
-      volume: +k.volume.toString(),
-    }));
-
-    return formattedData;
+    return klineData;
   }
 
   async deleteMeaninglessData() {

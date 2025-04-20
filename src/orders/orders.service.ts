@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderDto, OrderStatus, OrderType } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Order, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { SnowflakeService } from 'src/k-line/snowflake.service';
 import { ListOrderDto } from './dto/list-order.dto';
 
@@ -34,37 +34,28 @@ export class OrdersService {
       },
     });
 
-    return this.formatData([order])[0];
+    return order;
   }
 
   async list(user: User, listOrderDto: ListOrderDto) {
-    return await this.prismaService.order
-      .findMany({
-        where: {
-          user_id: user.id,
-          status: listOrderDto.orderStatus,
-          operation_mode: listOrderDto.operationMode,
-        },
-      })
-      .then((res) => this.formatData(res));
+    return await this.prismaService.order.findMany({
+      where: {
+        user_id: user.id,
+        status: listOrderDto.orderStatus,
+        operation_mode: listOrderDto.operationMode,
+      },
+    });
   }
 
-  private formatData(orders: Order[]) {
-    return orders.map((order) => ({
-      ...order,
-      id: order.id.toString(),
-      quantity: order.quantity.toString(),
-      time: order.time.toString(),
-    }));
-  }
-
-  async closePosition(user: User, orderId: string) {
+  async closePosition(user: User, orderId: bigint) {
     const order = await this.prismaService.order.findFirstOrThrow({
       where: {
-        id: Number(orderId),
+        id: orderId,
         user_id: user.id,
       },
     });
-    console.log(order);
+    console.log('@@@@', order);
+
+    return order;
   }
 }
