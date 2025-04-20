@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from 'nestjs-pino';
 import cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { GlobalFilter } from './filters/global.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -25,6 +26,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.get(ConfigService).getOrThrow('NODE_ENV') === 'development' &&
     app.enableCors();
+  app.useGlobalFilters(new GlobalFilter());
   await app.listen(app.get(ConfigService).getOrThrow('PORT'));
 }
 bootstrap();
