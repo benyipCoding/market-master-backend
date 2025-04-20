@@ -1,4 +1,12 @@
-import { Controller, Post, Body, UseGuards, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Query,
+  Param,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -19,5 +27,10 @@ export class OrdersController {
   @Get()
   list(@CurrentUser() user: User, @Query() listOrderDto: ListOrderDto) {
     return this.ordersService.list(user, listOrderDto);
+  }
+
+  @Post('close-pos/:id')
+  closePosition(@CurrentUser() user: User, @Param('id') orderId: string) {
+    return this.ordersService.closePosition(user, orderId);
   }
 }

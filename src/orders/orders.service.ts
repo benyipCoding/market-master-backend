@@ -57,4 +57,14 @@ export class OrdersService {
       time: order.time.toString(),
     }));
   }
+
+  async closePosition(user: User, orderId: string) {
+    const order = await this.prismaService.order.findFirstOrThrow({
+      where: {
+        id: Number(orderId),
+        user_id: user.id,
+      },
+    });
+    console.log(order);
+  }
 }
