@@ -6,7 +6,6 @@ import { Logger } from 'nestjs-pino';
 import cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { GlobalFilter } from './filters/global.filter';
-import { ConvertBigIntInterceptor } from './interceptors/convert-big-int.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -28,7 +27,7 @@ async function bootstrap() {
   app.get(ConfigService).getOrThrow('NODE_ENV') === 'development' &&
     app.enableCors();
   app.useGlobalFilters(new GlobalFilter());
-  app.useGlobalInterceptors(new ConvertBigIntInterceptor());
+
   await app.listen(app.get(ConfigService).getOrThrow('PORT'));
 }
 bootstrap();

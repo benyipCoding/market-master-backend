@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderDto, OrderStatus, OrderType } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { User } from '@prisma/client';
+import { Order, User } from '@prisma/client';
 import { SnowflakeService } from 'src/k-line/snowflake.service';
 import { ListOrderDto } from './dto/list-order.dto';
 
@@ -34,7 +34,7 @@ export class OrdersService {
       },
     });
 
-    return order;
+    return this.formatData([order])[0];
   }
 
   async list(user: User, listOrderDto: ListOrderDto) {
@@ -54,8 +54,16 @@ export class OrdersService {
         user_id: user.id,
       },
     });
-    console.log('@@@@', order);
 
-    return order;
+    return this.formatData([order])[0];
+  }
+
+  private formatData(orders: Order[]) {
+    return orders.map((order) => ({
+      ...order,
+      id: order.id.toString(),
+      quantity: order.quantity.toString(),
+      time: order.time.toString(),
+    }));
   }
 }
