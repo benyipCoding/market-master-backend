@@ -38,13 +38,19 @@ export class OrdersService {
   }
 
   async list(user: User, listOrderDto: ListOrderDto) {
-    return await this.prismaService.order.findMany({
+    const res = await this.prismaService.order.findMany({
       where: {
         user_id: user.id,
         status: listOrderDto.orderStatus,
         operation_mode: listOrderDto.operationMode,
       },
     });
+    return res.map((item) => ({
+      ...item,
+      id: item.id.toString(),
+      quantity: item.quantity.toString(),
+      time: item.time.toString(),
+    }));
   }
 
   async closePosition(user: User, orderId: bigint) {

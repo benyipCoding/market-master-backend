@@ -8,6 +8,9 @@ import { UploadModule } from './upload/upload.module';
 import { ProfileModule } from './profile/profile.module';
 import { AppController } from './app.controller';
 import { OrdersModule } from './orders/orders.module';
+import { RedisService } from './redis/redis.service';
+import { RedisModule } from './redis/redis.module';
+import { BackTestModule } from './back-test/back-test.module';
 
 @Module({
   imports: [
@@ -37,8 +40,10 @@ import { OrdersModule } from './orders/orders.module';
     UploadModule,
     ProfileModule,
     OrdersModule,
+    RedisModule,
+    BackTestModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [RedisService],
 })
 export class AppModule {}
