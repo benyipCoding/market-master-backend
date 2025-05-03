@@ -15,6 +15,6 @@ export class BackTestController {
     @CurrentUser() user: User,
     @Body() createRecordDto: CreateRecordDto,
   ) {
-    return this.backTestService.createRecord(user, createRecordDto);
+    return this.backTestService.createOrUpdateRecord(user, createRecordDto);
   }
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
@@ -11,6 +11,7 @@ import { OrdersModule } from './orders/orders.module';
 import { RedisService } from './redis/redis.service';
 import { RedisModule } from './redis/redis.module';
 import { BackTestModule } from './back-test/back-test.module';
+import { UserAgentMiddleware } from './middlewares/user-agent.middleware';
 
 @Module({
   imports: [
@@ -46,4 +47,8 @@ import { BackTestModule } from './back-test/back-test.module';
   controllers: [AppController],
   providers: [RedisService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(UserAgentMiddleware).forRoutes('*');
+  }
+}
