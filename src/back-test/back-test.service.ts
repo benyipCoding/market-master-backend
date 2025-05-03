@@ -6,14 +6,13 @@ import { RedisService } from 'src/redis/redis.service';
 @Injectable()
 export class BackTestService {
   constructor(private readonly redisService: RedisService) {}
-
   async createOrUpdateRecord(user: User, createRecordDto: CreateRecordDto) {
-    const key = `${user.id}_${createRecordDto.operation_mode}`;
-    // 判断key是否已存在
-    const isExisted = this.redisService.exists(key);
-    if (!isExisted) {
-      this.redisService.set(key, createRecordDto.latest_price);
-    } else {
-    }
+    const key = `BackTest_${user.id}_${createRecordDto.operation_mode}`;
+    this.redisService.set(key, JSON.stringify(createRecordDto));
+    return key;
+  }
+
+  async deleteRecord(key: string) {
+    return this.redisService.delete(key);
   }
 }
