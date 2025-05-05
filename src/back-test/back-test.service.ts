@@ -6,13 +6,23 @@ import { RedisService } from 'src/redis/redis.service';
 @Injectable()
 export class BackTestService {
   constructor(private readonly redisService: RedisService) {}
+
+  private generateKey(user: User) {
+    return `BackTest_${user.id}`;
+  }
+
   async createOrUpdateRecord(user: User, createRecordDto: CreateRecordDto) {
-    const key = `BackTest_${user.id}_${createRecordDto.operation_mode}`;
+    const key = this.generateKey(user);
     this.redisService.set(key, JSON.stringify(createRecordDto));
     return key;
   }
 
   async deleteRecord(key: string) {
     return this.redisService.delete(key);
+  }
+
+  getRecord(user: User) {
+    const key = this.generateKey(user);
+    return this.redisService.get(key);
   }
 }

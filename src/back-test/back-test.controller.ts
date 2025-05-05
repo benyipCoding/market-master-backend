@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   UseGuards,
@@ -28,5 +29,10 @@ export class BackTestController {
   @Delete(':key')
   deleteRecord(@Param('key') key: string) {
     return this.backTestService.deleteRecord(key);
+  }
+
+  @Get()
+  getRecord(@CurrentUser() user: User) {
+    return this.backTestService.getRecord(user);
   }
 }
