@@ -13,7 +13,7 @@ export class BackTestService {
 
   async createOrUpdateRecord(user: User, createRecordDto: CreateRecordDto) {
     const key = this.generateKey(user);
-    this.redisService.set(key, JSON.stringify(createRecordDto));
+    this.redisService.set(key, JSON.stringify({ ...createRecordDto, key }));
     return key;
   }
 
