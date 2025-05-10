@@ -73,4 +73,8 @@ export class CreateOrderDto {
   @IsEnum(OperationMode)
   @IsNotEmpty()
   operation_mode: OperationMode;
+
+  @IsNotEmpty()
+  @IsString()
+  backtest_id: string;
 }

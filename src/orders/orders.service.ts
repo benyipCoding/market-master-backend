@@ -31,6 +31,7 @@ export class OrdersService {
         operation_mode: createOrderDto.operation_mode,
         stop_price: createOrderDto.stop_price || null,
         limit_price: createOrderDto.limit_price || null,
+        backtest_id: createOrderDto.backtest_id,
       },
     });
 
@@ -42,7 +43,7 @@ export class OrdersService {
       where: {
         user_id: user.id,
         status: listOrderDto.orderStatus,
-        operation_mode: listOrderDto.operationMode,
+        backtest_id: listOrderDto.backtest_id,
       },
     });
     return res.map((item) => ({

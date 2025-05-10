@@ -1,12 +1,14 @@
-import { IsEnum, IsNotEmpty } from 'class-validator';
-import { OperationMode, OrderStatus } from './create-order.dto';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { OrderStatus } from './create-order.dto';
 
 export class ListOrderDto {
   @IsEnum(OrderStatus)
   @IsNotEmpty()
   orderStatus: OrderStatus;
 
-  @IsEnum(OperationMode)
+  // @IsEnum(OperationMode)
   @IsNotEmpty()
-  operationMode: OperationMode;
+  @IsString()
+  // operationMode: OperationMode;
+  backtest_id: string;
 }

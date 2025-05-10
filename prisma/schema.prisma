@@ -143,6 +143,7 @@ model Order {
   stop_price     Decimal?      @db.Decimal(20, 10) // 止损价
   time           BigInt // 对应K线上的timestamp字段 用于定位复盘时的订单是在哪根K线上
   operation_mode OperationMode
+  backtest_id    String?
 
   @@index([user_id]) // 索引：根据用户ID查找订单
 }
