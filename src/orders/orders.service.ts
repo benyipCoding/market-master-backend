@@ -1,15 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { CreateOrderDto, OrderStatus, OrderType } from './dto/create-order.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  CreateOrderDto,
+  OperationMode,
+  OrderSide,
+  OrderStatus,
+  OrderType,
+} from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Order, User } from '@prisma/client';
 import { SnowflakeService } from 'src/k-line/snowflake.service';
 import { ListOrderDto } from './dto/list-order.dto';
+import { RedisService } from 'src/redis/redis.service';
+import Big from 'big.js';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class OrdersService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly snowflakeService: SnowflakeService,
+    private readonly redisService: RedisService,
   ) {}
   async create(user: User, createOrderDto: CreateOrderDto) {
     const order = await this.prismaService.order.create({
@@ -62,7 +72,54 @@ export class OrdersService {
       },
     });
 
-    return this.formatData([order])[0];
+    // 获取BackTest的最新价格
+    const record = await this.redisService.get(order.backtest_id);
+    if (!record)
+      throw new BadRequestException(
+        `Can not find BackTest record: ${order.backtest_id}`,
+      );
+    const { latest_price, operation_mode } = JSON.parse(record);
+
+    // 结算盈亏
+    const profit = this.calProfit(
+      order.side as OrderSide,
+      Number(order.opening_price),
+      Number(latest_price),
+    );
+
+    // 更新用户的余额
+    const { id, balance_b, balance_p } =
+      await this.prismaService.profile.findUnique({
+        where: { user_id: user.id },
+      });
+
+    if (operation_mode === OperationMode.PRACTISE) {
+      await this.prismaService.profile.update({
+        where: { id },
+        data: {
+          balance_p: new Decimal(balance_p).add(profit),
+        },
+      });
+    } else {
+      await this.prismaService.profile.update({
+        where: { id },
+        data: {
+          balance_b: new Decimal(balance_b).add(profit),
+        },
+      });
+    }
+
+    // 更新订单状态
+    const closedOrder = await this.prismaService.order.update({
+      where: { id: order.id },
+      data: {
+        closing_price: new Decimal(latest_price),
+        status: OrderStatus.CLOSED,
+        profit: new Decimal(profit),
+      },
+    });
+
+    return this.formatData([closedOrder])[0];
   }
 
   private formatData(orders: Order[]) {
@@ -72,5 +129,17 @@ export class OrdersService {
       quantity: order.quantity.toString(),
       time: order.time.toString(),
     }));
+  }
+
+  private calProfit(
+    side: OrderSide,
+    opening_price: number,
+    latest_price: number,
+  ) {
+    if (side === OrderSide.BUY) {
+      return Number(new Big(latest_price).minus(opening_price).toFixed(2));
+    } else {
+      return Number(new Big(opening_price).minus(latest_price).toFixed(2));
+    }
   }
 }
