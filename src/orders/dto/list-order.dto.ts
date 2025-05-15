@@ -6,9 +6,7 @@ export class ListOrderDto {
   @IsNotEmpty()
   orderStatus: OrderStatus;
 
-  // @IsEnum(OperationMode)
   @IsNotEmpty()
   @IsString()
-  // operationMode: OperationMode;
   backtest_id: string;
 }

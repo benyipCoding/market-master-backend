@@ -1,4 +1,9 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { Redis } from 'ioredis';
 
 @Injectable()
@@ -26,7 +31,11 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   async get(key: string) {
-    return this.client.get(key);
+    const value = await this.client.get(key);
+    if (!value)
+      throw new BadRequestException(`Can not find redis value: ${key}`);
+
+    return value;
   }
 
   async exists(key: string): Promise<boolean> {

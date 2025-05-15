@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BackTestService } from './../back-test/back-test.service';
+import { Injectable } from '@nestjs/common';
 import {
   CreateOrderDto,
   OperationMode,
@@ -20,6 +21,7 @@ export class OrdersService {
     private readonly prismaService: PrismaService,
     private readonly snowflakeService: SnowflakeService,
     private readonly redisService: RedisService,
+    private readonly backTestService: BackTestService,
   ) {}
   async create(user: User, createOrderDto: CreateOrderDto) {
     const order = await this.prismaService.order.create({
@@ -73,11 +75,10 @@ export class OrdersService {
     });
 
     // 获取BackTest的最新价格
-    const record = await this.redisService.get(order.backtest_id);
-    if (!record)
-      throw new BadRequestException(
-        `Can not find BackTest record: ${order.backtest_id}`,
-      );
+    const record = await this.redisService.get(
+      this.backTestService.generateKey(user),
+    );
+
     const { latest_price, operation_mode } = JSON.parse(record);
 
     // 结算盈亏

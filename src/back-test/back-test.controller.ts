@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
 import { BackTestService } from './back-test.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { CreateRecordDto } from './dto/create-record.dto';
@@ -26,9 +18,9 @@ export class BackTestController {
     return this.backTestService.createOrUpdateRecord(user, createRecordDto);
   }
 
-  @Delete(':key')
-  deleteRecord(@Param('key') key: string) {
-    return this.backTestService.deleteRecord(key);
+  @Delete()
+  deleteRecord(@CurrentUser() user: User) {
+    return this.backTestService.deleteRecord(user);
   }
 
   @Get()

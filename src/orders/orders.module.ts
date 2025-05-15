@@ -4,9 +4,10 @@ import { OrdersController } from './orders.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { SnowflakeService } from 'src/k-line/snowflake.service';
 import { RedisModule } from 'src/redis/redis.module';
+import { BackTestModule } from 'src/back-test/back-test.module';
 
 @Module({
-  imports: [PrismaModule, RedisModule],
+  imports: [PrismaModule, RedisModule, BackTestModule],
   controllers: [OrdersController],
   providers: [OrdersService, SnowflakeService],
 })

@@ -7,5 +7,6 @@ import { RedisModule } from 'src/redis/redis.module';
   imports: [RedisModule],
   controllers: [BackTestController],
   providers: [BackTestService],
+  exports: [BackTestService],
 })
 export class BackTestModule {}
