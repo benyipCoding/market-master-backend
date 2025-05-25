@@ -180,4 +180,12 @@ export class OrdersService {
       );
     }
   }
+
+  async retrive(orderId: bigint) {
+    const order = await this.prismaService.order.findUniqueOrThrow({
+      where: { id: orderId },
+    });
+
+    return this.formatData([order])[0];
+  }
 }

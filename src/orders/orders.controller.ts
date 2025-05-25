@@ -44,4 +44,9 @@ export class OrdersController {
   ) {
     return this.ordersService.closePosition(user, orderId, action);
   }
+
+  @Get(':id')
+  retrive(@Param('id', ParseBigIntPipe) orderId: bigint) {
+    return this.ordersService.retrive(orderId);
+  }
 }
