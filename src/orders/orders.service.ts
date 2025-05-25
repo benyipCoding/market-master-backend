@@ -15,6 +15,12 @@ import { RedisService } from 'src/redis/redis.service';
 import Big from 'big.js';
 import { Decimal } from '@prisma/client/runtime/library';
 
+export enum ClosePosAction {
+  Actively = 0,
+  StopLoss = 1,
+  TakeProfit = 2,
+}
+
 @Injectable()
 export class OrdersService {
   constructor(
@@ -66,11 +72,17 @@ export class OrdersService {
     }));
   }
 
-  async closePosition(user: User, orderId: bigint) {
+  async closePosition(user: User, orderId: bigint, action: ClosePosAction) {
     const order = await this.prismaService.order.findFirstOrThrow({
       where: {
         id: orderId,
         user_id: user.id,
+      },
+    });
+
+    const symbol = await this.prismaService.symbol.findUnique({
+      where: {
+        id: order.symbol_id,
       },
     });
 
@@ -81,11 +93,20 @@ export class OrdersService {
 
     const { latest_price, operation_mode } = JSON.parse(record);
 
+    const price =
+      action === ClosePosAction.StopLoss
+        ? order.stop_price
+        : action === ClosePosAction.TakeProfit
+          ? order.limit_price
+          : latest_price;
+
     // 结算盈亏
     const profit = this.calProfit(
       order.side as OrderSide,
       Number(order.opening_price),
-      Number(latest_price),
+      Number(price),
+      Number(order.quantity),
+      symbol.price_per_tick,
     );
 
     // 更新用户的余额
@@ -114,7 +135,7 @@ export class OrdersService {
     const closedOrder = await this.prismaService.order.update({
       where: { id: order.id },
       data: {
-        closing_price: new Decimal(latest_price),
+        closing_price: new Decimal(price),
         status: OrderStatus.CLOSED,
         profit: new Decimal(profit),
       },
@@ -135,12 +156,28 @@ export class OrdersService {
   private calProfit(
     side: OrderSide,
     opening_price: number,
-    latest_price: number,
+    price: number,
+    unit: number,
+    price_per_tick: number,
   ) {
     if (side === OrderSide.BUY) {
-      return Number(new Big(latest_price).minus(opening_price).toFixed(2));
+      return Number(
+        new Big(price)
+          .minus(opening_price)
+          .div(price_per_tick)
+          .times(unit)
+          .div(100)
+          .toFixed(2),
+      );
     } else {
-      return Number(new Big(opening_price).minus(latest_price).toFixed(2));
+      return Number(
+        new Big(opening_price)
+          .minus(price)
+          .div(price_per_tick)
+          .times(unit)
+          .div(100)
+          .toFixed(2),
+      );
     }
   }
 }

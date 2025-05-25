@@ -15,6 +15,12 @@ import { CurrentUser } from 'src/auth/current-user.decorator';
 import { ListOrderDto } from './dto/list-order.dto';
 import { ParseBigIntPipe } from 'src/pipes/parse-big-int.pipe';
 
+export enum ClosePosAction {
+  Actively = 0,
+  StopLoss = 1,
+  TakeProfit = 2,
+}
+
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
 export class OrdersController {
@@ -34,7 +40,8 @@ export class OrdersController {
   closePosition(
     @CurrentUser() user: User,
     @Param('id', ParseBigIntPipe) orderId: bigint,
+    @Query('action') action: ClosePosAction,
   ) {
-    return this.ordersService.closePosition(user, orderId);
+    return this.ordersService.closePosition(user, orderId, action);
   }
 }
