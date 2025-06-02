@@ -1,38 +1,63 @@
+# Market Master Backend
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="_blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A backend service built with [NestJS](https://nestjs.com/) for a trading platform. This service provides order management, backtesting, authentication, and user profile functionalities.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
+
+- [Description](#description)
+- [Features](#features)
+- [Installation](#installation)
+- [Running the App](#running-the-app)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Dependencies](#dependencies)
+- [License](#license)
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is the backend component of a trading application called **Market Master**. It manages orders, profiles, authentication, and backtesting functionality using NestJS, Prisma ORM, Redis, and PostgreSQL.
+
+It supports both real-time trading and simulation (practise) modes, allowing users to test strategies without risking real money.
+
+## Features
+
+- JWT-based authentication system
+- User registration and profile management
+- Order creation, listing, and closing
+- Backtesting module with Redis caching
+- Support for different operation modes: `Practise` and `Blindbox`
+- Big number precision handling using `big.js`
+- Snowflake ID generation for unique order IDs
 
 ## Installation
 
 ```bash
+# Install dependencies
 $ npm install
 ```
 
-## Running the app
+Ensure you have a `.env` file configured with your database connection string and JWT secrets.
+
+Example `.env`:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/mydb?schema=public"
+JWT_SECRET="your_jwt_secret"
+JWT_ACCESS_EXPIRATION="1h"
+JWT_REFRESH_EXPIRATION="7d"
+```
+
+Run Prisma migration:
+
+```bash
+$ npx prisma migrate dev --name init
+```
+
+## Running the App
 
 ```bash
 # development
@@ -45,7 +70,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Testing
 
 ```bash
 # unit tests
@@ -58,15 +83,42 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Project Structure
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+The project follows a modular structure based on NestJS best practices:
 
-## Stay in touch
+```
+src/
+├── auth/               # Authentication module
+├── users/              # User management
+├── orders/             # Order management (create, list, close)
+├── back-test/          # Backtesting functionality
+├── k-line/             # K-line data and symbol management
+├── prisma/             # Prisma ORM integration
+├── redis/              # Redis cache utilities
+├── profile/            # User profile management
+└── main.ts             # Entry point
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Dependencies
+
+### Core Dependencies
+
+- [`@nestjs/core`](https://docs.nestjs.com/)
+- [`@nestjs/common`](https://docs.nestjs.com/)
+- [`@nestjs/jwt`](https://docs.nestjs.com/security/authentication)
+- [`prisma`](https://www.prisma.io/)
+- [`@prisma/client`](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client)
+- [`ioredis`](https://github.com/luin/ioredis)
+- [`big.js`](https://github.com/MikeMcl/big.js)
+
+### Dev Dependencies
+
+- Jest for testing
+- Eslint & Prettier for code formatting and linting
+- TypeScript
+
+See full dependency list in `package.json`.
 
 ## License
 
