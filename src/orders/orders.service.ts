@@ -64,6 +64,9 @@ export class OrdersService {
         status: listOrderDto.orderStatus,
         backtest_id: listOrderDto.backtest_id,
       },
+      orderBy: {
+        time: 'asc',
+      },
     });
     return res.map((item) => ({
       ...item,
