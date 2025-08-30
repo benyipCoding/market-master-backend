@@ -14,6 +14,7 @@ import { ListOrderDto } from './dto/list-order.dto';
 import { RedisService } from 'src/redis/redis.service';
 import Big from 'big.js';
 import { Decimal } from '@prisma/client/runtime/library';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 export enum ClosePosAction {
   Actively = 0,
@@ -184,6 +185,22 @@ export class OrdersService {
   async retrive(orderId: bigint) {
     const order = await this.prismaService.order.findUniqueOrThrow({
       where: { id: orderId },
+    });
+
+    return this.formatData([order])[0];
+  }
+
+  async updateOrder(orderId: bigint, updateOrderDto: UpdateOrderDto) {
+    const order = await this.prismaService.order.update({
+      where: { id: orderId },
+      data: {
+        stop_price: updateOrderDto.stopLossActive
+          ? updateOrderDto.stopLossValue
+          : null,
+        limit_price: updateOrderDto.takeProfitActive
+          ? updateOrderDto.takeProfitValue
+          : null,
+      },
     });
 
     return this.formatData([order])[0];

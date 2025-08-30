@@ -6,6 +6,7 @@ import {
   Get,
   Query,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -14,6 +15,7 @@ import { User } from '@prisma/client';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { ListOrderDto } from './dto/list-order.dto';
 import { ParseBigIntPipe } from 'src/pipes/parse-big-int.pipe';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 export enum ClosePosAction {
   Actively = 0,
@@ -48,5 +50,13 @@ export class OrdersController {
   @Get(':id')
   retrive(@Param('id', ParseBigIntPipe) orderId: bigint) {
     return this.ordersService.retrive(orderId);
+  }
+
+  @Patch(':id')
+  updateOrder(
+    @Param('id', ParseBigIntPipe) orderId: bigint,
+    @Body() updateOrderDto: UpdateOrderDto,
+  ) {
+    return this.ordersService.updateOrder(orderId, updateOrderDto);
   }
 }
